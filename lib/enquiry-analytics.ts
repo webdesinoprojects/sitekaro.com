@@ -1,4 +1,4 @@
-import { Enquiry } from "@prisma/client";
+import { Enquiry } from "./generated/prisma";
 import { startOfDay, subDays, format, isWithinInterval, startOfWeek } from "date-fns";
 
 export interface ServiceCount {
