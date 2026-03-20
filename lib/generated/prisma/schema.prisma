@@ -1,0 +1,218 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model Admin {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Employee {
+  id          String        @id @default(cuid())
+  name        String
+  email       String        @unique
+  password    String
+  role        String        @default("editor")
+  permissions String[]
+  status      String        @default("active")
+  lastLogin   DateTime?
+  note        String?
+  logs        EmployeeLog[]
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+}
+
+model Project {
+  id              String   @id @default(cuid())
+  title           String
+  client          String   @default("")
+  slug            String   @unique
+  industry        String
+  description     String
+  image           String
+  fullDescription String?
+  results         String?
+  resultsData     Json?
+  highlights      String[]
+  metrics         Json?
+  challenges      Json?
+  solutions       Json?
+  implementation  Json?
+  testimonial     Json?
+  keyLearnings    String[]
+  relatedServices Json?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  faqs            Json?
+}
+
+model BlogPost {
+  id        String   @id @default(cuid())
+  title     String
+  slug      String   @unique
+  date      DateTime @default(now())
+  category  String
+  excerpt   String
+  image     String?
+  content   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Enquiry {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  phone     String?
+  service   String?
+  message   String
+  status    String   @default("new")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Testimonial {
+  id        String   @id @default(cuid())
+  name      String
+  text      String
+  company   String?
+  location  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ServiceCategory {
+  id          String           @id @default(cuid())
+  title       String
+  slug        String           @unique
+  description String
+  icon        String?
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+  subtypes    ServiceSubtype[]
+}
+
+model ServiceSubtype {
+  id          String          @id @default(cuid())
+  title       String
+  slug        String          @unique
+  description String
+  features    String[]
+  benefits    String[]
+  icon        String?
+  categoryId  String
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+  category    ServiceCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+}
+
+model LocationPage {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  location    String
+  title       String
+  description String?
+  content     Json?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Page {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  title       String
+  description String?
+  content     Json?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Client {
+  id        String   @id @default(cuid())
+  name      String
+  url       String
+  image     String
+  category  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model TeamMember {
+  id        String   @id @default(cuid())
+  name      String
+  role      String
+  image     String
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Certification {
+  id        String   @id @default(cuid())
+  name      String
+  image     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model CompanySettings {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model LegalPage {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  title       String
+  lastUpdated String
+  content     String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Faq {
+  id        String   @id @default(cuid())
+  question  String
+  answer    String
+  category  String   @default("General")
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("FAQ")
+}
+
+model Media {
+  id        String   @id @default(cuid())
+  filename  String
+  url       String   @unique
+  mimeType  String?
+  size      Int?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model EmployeeLog {
+  id         String   @id @default(cuid())
+  employeeId String
+  employee   Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  action     String
+  section    String
+  createdAt  DateTime @default(now())
+
+  @@index([employeeId])
+}

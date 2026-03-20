@@ -1,0 +1,103 @@
+import { MetadataRoute } from 'next';
+import { getPortfolioProjects } from '@/lib/data';
+import { getAllCaseSlugs } from '@/lib/case-studies';
+import { servicesData } from '@/lib/services-data';
+import prisma from '@/lib/prisma';
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  // 1. Get all dynamic project routes
+  const projects = getPortfolioProjects();
+  const projectEntries: MetadataRoute.Sitemap = projects.map((project) => ({
+    url: `https://sitekaro.com/portfolio/${project.slug}`,
+    lastModified: new Date(),
+    changeFrequency: 'monthly' as const,
+    priority: 0.8,
+  }));
+
+  // 2. Get all case study routes
+  const caseSlugs = getAllCaseSlugs();
+  const caseStudyEntries: MetadataRoute.Sitemap = caseSlugs.map((slug) => ({
+    url: `https://sitekaro.com/case-studies/${slug}`,
+    lastModified: new Date(),
+    changeFrequency: 'monthly' as const,
+    priority: 0.9,
+  }));
+
+  // 3. Get all service routes
+  const serviceCategoryEntries: MetadataRoute.Sitemap = servicesData.map((category) => ({
+    url: `https://sitekaro.com/services/${category.slug}`,
+    lastModified: new Date(),
+    changeFrequency: 'weekly' as const,
+    priority: 0.9,
+  }));
+
+  const serviceSubtypeEntries: MetadataRoute.Sitemap = servicesData.flatMap((category) => 
+    category.subtypes.map((subtype) => ({
+      url: `https://sitekaro.com/services/${category.slug}/${subtype.slug}`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly' as const,
+      priority: 0.9,
+    }))
+  );
+
+  // 4. Get all location routes
+  const locations = await prisma.locationPage.findMany({
+    select: { slug: true },
+  });
+  const locationEntries: MetadataRoute.Sitemap = locations.map((loc) => ({
+    url: `https://sitekaro.com/${loc.slug}`,
+    lastModified: new Date(),
+    changeFrequency: 'weekly' as const,
+    priority: 0.8,
+  }));
+
+  // 5. Define static routes
+  const staticRoutes: MetadataRoute.Sitemap = [
+    {
+      url: 'https://sitekaro.com',
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 1,
+    },
+    {
+      url: 'https://sitekaro.com/about',
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
+    {
+      url: 'https://sitekaro.com/services',
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.9,
+    },
+    {
+      url: 'https://sitekaro.com/contact',
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.7,
+    },
+    {
+      url: 'https://sitekaro.com/portfolio',
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.9,
+    },
+    {
+      url: 'https://sitekaro.com/case-studies',
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.9,
+    },
+  ];
+
+  // 5. Combine and return
+  return [
+    ...staticRoutes,
+    ...serviceCategoryEntries,
+    ...serviceSubtypeEntries,
+    ...projectEntries,
+    ...caseStudyEntries,
+    ...locationEntries,
+  ];
+}

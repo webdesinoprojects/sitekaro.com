@@ -1,0 +1,102 @@
+import { prisma } from "@/lib/prisma";
+import { Metadata } from "next";
+import Link from "next/link";
+import Image from "next/image";
+import { GoalIcon } from "lucide-react";
+import { getStorageUrl } from "@/lib/utils";
+
+export const metadata: Metadata = {
+  title: "Portfolio - Web Development Projects | Sitekaro",
+  description:
+    "Explore Sitekaro's portfolio of successful web development and digital marketing projects. See how we've helped businesses in Delhi NCR achieve remarkable growth through SEO, website development, and digital marketing strategies.",
+  alternates: {
+    canonical: "/portfolio",
+  },
+  keywords:
+    "web development portfolio, SEO case studies, digital marketing projects, website development delhi, portfolio projects",
+  openGraph: {
+    title: "Portfolio - Web Development Projects | Sitekaro",
+    description:
+      "Explore Sitekaro's portfolio of successful web development and digital marketing projects.",
+    type: "website",
+  },
+};
+
+export default async function PortfolioPage() {
+  const projects = await prisma.project.findMany({
+    orderBy: { id: 'asc' },
+  });
+  
+  // Get unique industries
+  const industries = Array.from(new Set(projects.map(p => p.industry)));
+
+  return (
+    <main className="min-h-screen bg-cream py-16 lg:py-24">
+      <div className="container mx-auto px-4">
+        <div className="max-w-6xl mx-auto">
+          <h1 className="text-4xl lg:text-6xl font-bold text-center text-[#ff4b11] mb-4">
+            Our Portfolio & Case Studies
+          </h1>
+          <p className="text-xl text-center text-gray-700 mb-12 max-w-3xl mx-auto">
+            Discover how Sitekaro has helped businesses across Delhi NCR achieve remarkable
+            growth through professional web development, SEO, and digital marketing solutions.
+          </p>
+
+          {/* Projects Grid */}
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+            {projects.map((project) => (
+              <Link
+                key={project.id}
+                href={`/case-studies/${project.slug}`}
+                className="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 group flex flex-col min-h-[390px]"
+              >
+                <div className="relative aspect-[16/9] min-h-[220px] bg-gradient-to-br from-[#ff4b11]/20 to-black/20 overflow-hidden">
+                  {project.image ? (
+                    <Image
+                      src={getStorageUrl(project.image)}
+                      alt={`${project.title} - ${project.industry} Website Development`}
+                      fill
+                      className="object-contain group-hover:scale-110 transition-transform duration-300"
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center">
+                      <GoalIcon className="w-12 h-12 text-[#ff4b11]" />
+                    </div>
+                  )}
+                  <div className="absolute top-4 left-4 bg-[#ff4b11] text-white px-3 py-1 rounded-full text-xs font-semibold">
+                    {project.industry}
+                  </div>
+                </div>
+                <div className="p-6 flex-1">
+                  <h2 className="text-xl font-bold text-[#ff4b11] mb-2 group-hover:text-[#ff4b11] transition">
+                    {project.title}
+                  </h2>
+                  <p className="text-gray-700 line-clamp-2">{project.description}</p>
+                </div>
+              </Link>
+            ))}
+          </div>
+
+          {/* Industries Served */}
+          <div className="bg-white rounded-xl p-8 shadow-lg">
+            <h2 className="text-2xl font-bold text-[#ff4b11] mb-6 text-center">
+              Industries We Serve
+            </h2>
+            <div className="flex flex-wrap justify-center gap-3">
+              {industries.map((industry) => (
+                <span
+                  key={industry}
+                  className="px-4 py-2 bg-gray-100 text-[#ff4b11] rounded-full font-semibold"
+                >
+                  {industry}
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  );
+}
+
