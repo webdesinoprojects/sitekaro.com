@@ -6,10 +6,12 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import Link from "next/link";
-import { ArrowLeft, Plus, Trash2, RefreshCw } from "lucide-react";
+import { ArrowLeft, Plus, Trash2, RefreshCw, Sparkles } from "lucide-react";
 import { createLocation, updateLocation } from "@/lib/actions";
 import ImageUpload from "@/components/admin/ImageUpload";
+import { generateLocationTemplate, SERVICE_FOCUS_OPTIONS, type ServiceFocus } from "@/lib/location-templates";
 
 interface Service {
   title: string;
@@ -45,6 +47,7 @@ interface LocationFormProps {
     slug: string;
     title: string;
     description: string | null;
+    serviceFocus: string;
     content: any;
   };
   returnPath?: string;
@@ -53,6 +56,14 @@ interface LocationFormProps {
 export default function LocationForm({ location, returnPath }: LocationFormProps) {
   const isEditing = !!location;
   const action = isEditing ? updateLocation.bind(null, location.id) : createLocation;
+
+  const [locationName, setLocationName] = useState(location?.location || "");
+  const [serviceFocus, setServiceFocus] = useState<ServiceFocus>(
+    (location?.serviceFocus as ServiceFocus) || "all-services"
+  );
+  const [slug, setSlug] = useState(location?.slug || "");
+  const [title, setTitle] = useState(location?.title || "");
+  const [description, setDescription] = useState(location?.description || "");
 
   const generateContent = (locName: string): Content => ({
     hero: {
@@ -121,11 +132,29 @@ export default function LocationForm({ location, returnPath }: LocationFormProps
     };
   });
 
+  // Auto-generate content when location or service focus changes
+  const handleAutoGenerate = () => {
+    if (!locationName.trim()) {
+      alert("Please enter a location name first");
+      return;
+    }
+
+    const template = generateLocationTemplate(locationName, serviceFocus);
+    
+    setSlug(template.slug);
+    setTitle(template.title);
+    setDescription(template.description);
+    setContent(template.content);
+  };
+
   const handleRegenerate = () => {
-    const locInput = document.getElementById('location') as HTMLInputElement;
-    const locName = locInput?.value || "your area";
-    if (confirm(`Are you sure you want to regenerate all content for "${locName}"? This will overwrite current changes.`)) {
-      setContent(generateContent(locName));
+    if (!locationName.trim()) {
+      alert("Please enter a location name first");
+      return;
+    }
+    
+    if (confirm(`Are you sure you want to regenerate all content for "${locationName}"? This will overwrite current changes.`)) {
+      handleAutoGenerate();
     }
   };
 
@@ -184,6 +213,7 @@ export default function LocationForm({ location, returnPath }: LocationFormProps
 
       <form action={action} className="admin-premium-form space-y-8">
         <input type="hidden" name="content" value={JSON.stringify(content)} />
+        <input type="hidden" name="serviceFocus" value={serviceFocus} />
         {returnPath && <input type="hidden" name="_returnPath" value={returnPath} />}
         
         <Card>
@@ -194,32 +224,61 @@ export default function LocationForm({ location, returnPath }: LocationFormProps
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="location">Location Name</Label>
-                <div className="flex gap-2">
-                  <Input
-                    id="location"
-                    name="location"
-                    placeholder="e.g. New Delhi"
-                    defaultValue={location?.location}
-                    required
-                  />
-                  <Button 
-                    type="button" 
-                    variant="outline" 
-                    size="icon" 
-                    onClick={handleRegenerate} 
-                    title="Regenerate Content from Location Name"
-                  >
-                    <RefreshCw className="h-4 w-4" />
-                  </Button>
-                </div>
+                <Input
+                  id="location"
+                  name="location"
+                  placeholder="e.g. Karol Bagh"
+                  value={locationName}
+                  onChange={(e) => setLocationName(e.target.value)}
+                  required
+                />
               </div>
+              <div className="space-y-2">
+                <Label htmlFor="serviceFocus">Service Focus</Label>
+                <Select value={serviceFocus} onValueChange={(value) => setServiceFocus(value as ServiceFocus)}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select service focus" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {SERVICE_FOCUS_OPTIONS.map((option) => (
+                      <SelectItem key={option.value} value={option.value}>
+                        {option.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            <div className="flex gap-2">
+              <Button 
+                type="button" 
+                onClick={handleAutoGenerate}
+                className="flex-1"
+                variant="default"
+              >
+                <Sparkles className="h-4 w-4 mr-2" />
+                Auto-Generate Content
+              </Button>
+              <Button 
+                type="button" 
+                variant="outline" 
+                onClick={handleRegenerate}
+                title="Regenerate all content"
+              >
+                <RefreshCw className="h-4 w-4" />
+              </Button>
+            </div>
+
+            <div className="grid grid-cols-1 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="slug">Slug</Label>
                 <Input
                   id="slug"
                   name="slug"
-                  placeholder="e.g. best-web-developer-in-new-delhi"
-                  defaultValue={location?.slug}
+                  placeholder="e.g. best-web-development-company-in-karol-bagh"
+                  value={slug}
+                  onChange={(e) => setSlug(e.target.value)}
                   required
                 />
               </div>
@@ -230,8 +289,9 @@ export default function LocationForm({ location, returnPath }: LocationFormProps
               <Input
                 id="title"
                 name="title"
-                placeholder="e.g. Best Web Development Company in New Delhi"
-                defaultValue={location?.title}
+                placeholder="e.g. Best Web Development Company in Karol Bagh"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
                 required
               />
             </div>
@@ -242,7 +302,8 @@ export default function LocationForm({ location, returnPath }: LocationFormProps
                 id="description"
                 name="description"
                 placeholder="SEO Description..."
-                defaultValue={location?.description || ""}
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
                 rows={3}
               />
             </div>

@@ -10039,6 +10039,7 @@ export namespace Prisma {
     id: string | null
     slug: string | null
     location: string | null
+    serviceFocus: string | null
     title: string | null
     description: string | null
     createdAt: Date | null
@@ -10049,6 +10050,7 @@ export namespace Prisma {
     id: string | null
     slug: string | null
     location: string | null
+    serviceFocus: string | null
     title: string | null
     description: string | null
     createdAt: Date | null
@@ -10059,6 +10061,7 @@ export namespace Prisma {
     id: number
     slug: number
     location: number
+    serviceFocus: number
     title: number
     description: number
     content: number
@@ -10072,6 +10075,7 @@ export namespace Prisma {
     id?: true
     slug?: true
     location?: true
+    serviceFocus?: true
     title?: true
     description?: true
     createdAt?: true
@@ -10082,6 +10086,7 @@ export namespace Prisma {
     id?: true
     slug?: true
     location?: true
+    serviceFocus?: true
     title?: true
     description?: true
     createdAt?: true
@@ -10092,6 +10097,7 @@ export namespace Prisma {
     id?: true
     slug?: true
     location?: true
+    serviceFocus?: true
     title?: true
     description?: true
     content?: true
@@ -10176,6 +10182,7 @@ export namespace Prisma {
     id: string
     slug: string
     location: string
+    serviceFocus: string
     title: string
     description: string | null
     content: JsonValue | null
@@ -10204,6 +10211,7 @@ export namespace Prisma {
     id?: boolean
     slug?: boolean
     location?: boolean
+    serviceFocus?: boolean
     title?: boolean
     description?: boolean
     content?: boolean
@@ -10215,6 +10223,7 @@ export namespace Prisma {
     id?: boolean
     slug?: boolean
     location?: boolean
+    serviceFocus?: boolean
     title?: boolean
     description?: boolean
     content?: boolean
@@ -10226,6 +10235,7 @@ export namespace Prisma {
     id?: boolean
     slug?: boolean
     location?: boolean
+    serviceFocus?: boolean
     title?: boolean
     description?: boolean
     content?: boolean
@@ -10241,6 +10251,7 @@ export namespace Prisma {
       id: string
       slug: string
       location: string
+      serviceFocus: string
       title: string
       description: string | null
       content: Prisma.JsonValue | null
@@ -10642,6 +10653,7 @@ export namespace Prisma {
     readonly id: FieldRef<"LocationPage", 'String'>
     readonly slug: FieldRef<"LocationPage", 'String'>
     readonly location: FieldRef<"LocationPage", 'String'>
+    readonly serviceFocus: FieldRef<"LocationPage", 'String'>
     readonly title: FieldRef<"LocationPage", 'String'>
     readonly description: FieldRef<"LocationPage", 'String'>
     readonly content: FieldRef<"LocationPage", 'Json'>
@@ -19281,6 +19293,7 @@ export namespace Prisma {
     id: 'id',
     slug: 'slug',
     location: 'location',
+    serviceFocus: 'serviceFocus',
     title: 'title',
     description: 'description',
     content: 'content',
@@ -20151,6 +20164,7 @@ export namespace Prisma {
     id?: StringFilter<"LocationPage"> | string
     slug?: StringFilter<"LocationPage"> | string
     location?: StringFilter<"LocationPage"> | string
+    serviceFocus?: StringFilter<"LocationPage"> | string
     title?: StringFilter<"LocationPage"> | string
     description?: StringNullableFilter<"LocationPage"> | string | null
     content?: JsonNullableFilter<"LocationPage">
@@ -20162,6 +20176,7 @@ export namespace Prisma {
     id?: SortOrder
     slug?: SortOrder
     location?: SortOrder
+    serviceFocus?: SortOrder
     title?: SortOrder
     description?: SortOrderInput | SortOrder
     content?: SortOrderInput | SortOrder
@@ -20176,6 +20191,7 @@ export namespace Prisma {
     OR?: LocationPageWhereInput[]
     NOT?: LocationPageWhereInput | LocationPageWhereInput[]
     location?: StringFilter<"LocationPage"> | string
+    serviceFocus?: StringFilter<"LocationPage"> | string
     title?: StringFilter<"LocationPage"> | string
     description?: StringNullableFilter<"LocationPage"> | string | null
     content?: JsonNullableFilter<"LocationPage">
@@ -20187,6 +20203,7 @@ export namespace Prisma {
     id?: SortOrder
     slug?: SortOrder
     location?: SortOrder
+    serviceFocus?: SortOrder
     title?: SortOrder
     description?: SortOrderInput | SortOrder
     content?: SortOrderInput | SortOrder
@@ -20204,6 +20221,7 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"LocationPage"> | string
     slug?: StringWithAggregatesFilter<"LocationPage"> | string
     location?: StringWithAggregatesFilter<"LocationPage"> | string
+    serviceFocus?: StringWithAggregatesFilter<"LocationPage"> | string
     title?: StringWithAggregatesFilter<"LocationPage"> | string
     description?: StringNullableWithAggregatesFilter<"LocationPage"> | string | null
     content?: JsonNullableWithAggregatesFilter<"LocationPage">
@@ -21494,6 +21512,7 @@ export namespace Prisma {
     id?: string
     slug: string
     location: string
+    serviceFocus?: string
     title: string
     description?: string | null
     content?: NullableJsonNullValueInput | InputJsonValue
@@ -21505,6 +21524,7 @@ export namespace Prisma {
     id?: string
     slug: string
     location: string
+    serviceFocus?: string
     title: string
     description?: string | null
     content?: NullableJsonNullValueInput | InputJsonValue
@@ -21516,6 +21536,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     location?: StringFieldUpdateOperationsInput | string
+    serviceFocus?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     content?: NullableJsonNullValueInput | InputJsonValue
@@ -21527,6 +21548,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     location?: StringFieldUpdateOperationsInput | string
+    serviceFocus?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     content?: NullableJsonNullValueInput | InputJsonValue
@@ -21538,6 +21560,7 @@ export namespace Prisma {
     id?: string
     slug: string
     location: string
+    serviceFocus?: string
     title: string
     description?: string | null
     content?: NullableJsonNullValueInput | InputJsonValue
@@ -21549,6 +21572,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     location?: StringFieldUpdateOperationsInput | string
+    serviceFocus?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     content?: NullableJsonNullValueInput | InputJsonValue
@@ -21560,6 +21584,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     location?: StringFieldUpdateOperationsInput | string
+    serviceFocus?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     content?: NullableJsonNullValueInput | InputJsonValue
@@ -22648,6 +22673,7 @@ export namespace Prisma {
     id?: SortOrder
     slug?: SortOrder
     location?: SortOrder
+    serviceFocus?: SortOrder
     title?: SortOrder
     description?: SortOrder
     content?: SortOrder
@@ -22659,6 +22685,7 @@ export namespace Prisma {
     id?: SortOrder
     slug?: SortOrder
     location?: SortOrder
+    serviceFocus?: SortOrder
     title?: SortOrder
     description?: SortOrder
     createdAt?: SortOrder
@@ -22669,6 +22696,7 @@ export namespace Prisma {
     id?: SortOrder
     slug?: SortOrder
     location?: SortOrder
+    serviceFocus?: SortOrder
     title?: SortOrder
     description?: SortOrder
     createdAt?: SortOrder
