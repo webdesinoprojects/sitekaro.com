@@ -133,9 +133,9 @@ export default function Hero({ showcaseItems = [] }: HeroProps) {
 							<span className="block">
 								Stunning Websites By Top
 							</span>
-							<span className="block text-[#ff4b11]">
+							<span className="block text-[#ff4b11] text-3xl sm:text-4xl md:text-5xl lg:text-6xl">
 								{/* CLS fix: reserve consistent inline width for rotating typed text. */}
-								<span className="inline-block min-w-[24ch]">{text}</span>
+								<span className="inline-block">{text}</span>
 								{/* CLS fix: cursor keeps fixed width so pulse animation doesn't reflow text. */}
 								<span className="inline-block w-[0.6ch] animate-pulse text-[#ff4b11]" aria-hidden="true">|</span>
 							</span>
