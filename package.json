@@ -11,7 +11,9 @@
     "lint": "next lint",
     "theme:colors": "node scripts/replace-colors.js",
     "theme:branding": "node scripts/replace-branding.js",
-    "theme:rebrand": "node scripts/theme-rebrand.js"
+    "theme:rebrand": "node scripts/theme-rebrand.js",
+    "blogs:delete-old": "ts-node scripts/delete-old-blogs.ts",
+    "blogs:delete-old-safe": "ts-node scripts/delete-old-blogs-safe.ts"
   },
   "prisma": {
     "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
